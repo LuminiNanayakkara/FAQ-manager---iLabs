@@ -21,32 +21,41 @@ const useStyles = makeStyles((theme) => ({
   plusIcon: {
     color: "#0D47A1",
   },
+  headerContainer: {
+    paddingTop: "1rem",
+    paddingLeft: "1rem",
+    paddingRight: "1rem",
+  },
 }));
 
 const Header = () => {
   const classes = useStyles();
   return (
     <React.Fragment>
-      <AppBar className={classes.appBar}>
-        <Toolbar>
-          <Grid container justifyContent="space-between">
-            <Grid item>
-              <Typography variant="h6" className={classes.headerTitle}>
-                FAQ Manager - iLabs
-              </Typography>
-            </Grid>
-            <Grid item>
-              <Button
-                variant="contained"
-                startIcon={<AddCircleIcon className={classes.plusIcon} />}
-                className={classes.addQuestionButton}
-              >
-                Add New Question
-              </Button>
-            </Grid>
-          </Grid>
-        </Toolbar>
-      </AppBar>
+      {/* <AppBar className={classes.appBar}>
+        <Toolbar> */}
+      <Grid
+        container
+        justifyContent="space-between"
+        className={classes.headerContainer}
+      >
+        <Grid item>
+          <Typography variant="h6" className={classes.headerTitle}>
+            FAQ Manager - iLabs
+          </Typography>
+        </Grid>
+        <Grid item>
+          <Button
+            variant="contained"
+            startIcon={<AddCircleIcon className={classes.plusIcon} />}
+            className={classes.addQuestionButton}
+          >
+            Add New Question
+          </Button>
+        </Grid>
+      </Grid>
+      {/* </Toolbar>
+      </AppBar> */}
     </React.Fragment>
   );
 };
