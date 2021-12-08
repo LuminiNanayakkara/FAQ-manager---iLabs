@@ -1,5 +1,6 @@
 import Header from "./components/ui/Header";
 import { makeStyles } from "@material-ui/core/styles";
+import SearchBar from "./components/ui/SearchBar";
 
 const useStyles = makeStyles((theme) => ({
   app: {
@@ -13,6 +14,7 @@ const App = () => {
   return (
     <div className={classes.app}>
       <Header />
+      <SearchBar />
     </div>
   );
 };
