@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 
 import AddCircleIcon from "@material-ui/icons/AddCircle";
+import QuestionModal from "../modal/QuestionModal";
 
 const useStyles = makeStyles((theme) => ({
   addQuestionButton: {
@@ -29,6 +30,15 @@ const useStyles = makeStyles((theme) => ({
 
 const Header = () => {
   const classes = useStyles();
+  const [modalOpen, setModalOpen] = useState(false);
+
+  const handleOpen = () => {
+    setModalOpen(true);
+  };
+
+  const handleClose = () => {
+    setModalOpen(false);
+  };
   return (
     <React.Fragment>
       <Grid
@@ -46,11 +56,13 @@ const Header = () => {
             variant="contained"
             startIcon={<AddCircleIcon className={classes.plusIcon} />}
             className={classes.addQuestionButton}
+            onClick={() => handleOpen()}
           >
             Add New Question
           </Button>
         </Grid>
       </Grid>
+      <QuestionModal handleClose={handleClose} open={modalOpen} />
     </React.Fragment>
   );
 };
