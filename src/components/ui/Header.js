@@ -23,8 +23,8 @@ const useStyles = makeStyles((theme) => ({
   },
   headerContainer: {
     paddingTop: "1rem",
-    paddingLeft: "1rem",
-    paddingRight: "1rem",
+    paddingLeft: "2rem",
+    paddingRight: "2rem",
     paddingBottom: "2rem",
   },
 }));
