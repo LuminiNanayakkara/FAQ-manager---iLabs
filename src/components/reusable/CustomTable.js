@@ -1,17 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
-import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
-import TableSortLabel from "@material-ui/core/TableSortLabel";
 import Paper from "@material-ui/core/Paper";
 import CustomTableHead from "./CustomTableHead";
 import Button from "@material-ui/core/Button";
 import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
+import Typography from "@material-ui/core/Typography";
+import Grid from "@material-ui/core/Grid";
+import VisibilityIcon from "@material-ui/icons/Visibility";
+import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline";
+import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -93,12 +98,26 @@ function stableSort(array, comparator) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-export default function EnhancedTable() {
+export default function CustomTable() {
   const classes = useStyles();
-  const [order, setOrder] = React.useState("asc");
-  const [orderBy, setOrderBy] = React.useState("calories");
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [order, setOrder] = useState("asc");
+  const [orderBy, setOrderBy] = useState("calories");
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [action, setAction] = useState(false);
+
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+  const id = open ? "simple-popover" : undefined;
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -156,7 +175,56 @@ export default function EnhancedTable() {
                         </Button>
                       </TableCell>
                       <TableCell align="center">
-                        <MoreHorizIcon />
+                        <MoreHorizIcon
+                          aria-describedby={id}
+                          onClick={handleClick}
+                        />
+
+                        <Menu
+                          id={id}
+                          open={open}
+                          anchorEl={anchorEl}
+                          onClose={handleClose}
+                          anchorOrigin={{
+                            vertical: "center",
+                            horizontal: "right",
+                          }}
+                          transformOrigin={{
+                            vertical: "center",
+                            horizontal: "right",
+                          }}
+                        >
+                          <MenuItem onClick={handleClose}>
+                            <Grid container spacing={2}>
+                              <Grid item>
+                                <VisibilityIcon />
+                              </Grid>
+                              <Grid item>
+                                <Typography>View</Typography>
+                              </Grid>
+                            </Grid>
+                          </MenuItem>
+                          <MenuItem onClick={handleClose}>
+                            <Grid container spacing={2}>
+                              <Grid item>
+                                <CheckCircleOutlineIcon />
+                              </Grid>
+                              <Grid item>
+                                <Typography>Deactivate</Typography>
+                              </Grid>
+                            </Grid>
+                          </MenuItem>
+                          <MenuItem onClick={handleClose}>
+                            <Grid container spacing={2}>
+                              <Grid item>
+                                <DeleteForeverIcon />
+                              </Grid>
+                              <Grid item>
+                                <Typography>Delete</Typography>
+                              </Grid>
+                            </Grid>
+                          </MenuItem>
+                        </Menu>
                       </TableCell>
                     </TableRow>
                   );
