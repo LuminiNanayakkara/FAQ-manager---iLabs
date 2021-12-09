@@ -10,6 +10,7 @@ const useStyles = makeStyles((theme) => ({
     padding: "0.5rem",
     marginLeft: "2rem",
     marginRight: "2rem",
+    marginBottom: "2rem",
   },
   searchButton: {
     height: "3.4rem",
