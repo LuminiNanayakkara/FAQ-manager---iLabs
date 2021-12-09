@@ -11,6 +11,7 @@ import TableSortLabel from "@material-ui/core/TableSortLabel";
 import Paper from "@material-ui/core/Paper";
 import CustomTableHead from "./CustomTableHead";
 import Button from "@material-ui/core/Button";
+import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -46,8 +47,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function createData(name, calories, fat, status, protein) {
-  return { name, calories, fat, status, protein };
+function createData(name, calories, fat, status) {
+  return { name, calories, fat, status };
 }
 
 const rows = [
@@ -55,17 +56,15 @@ const rows = [
     "1",
     "What is the vision of the iLab?",
     "About Company",
-    "Published",
-    4.3
+    "Published"
   ),
   createData(
     "2",
     "What is the mission of the iLab?",
     "About Company",
-    "Published",
-    4.9
+    "Published"
   ),
-  createData("3", "When iLab got established?", "About Company", "Draft", 6.0),
+  createData("3", "When iLab got established?", "About Company", "Draft"),
 ];
 
 function descendingComparator(a, b, orderBy) {
@@ -156,7 +155,9 @@ export default function EnhancedTable() {
                           {row.status}
                         </Button>
                       </TableCell>
-                      <TableCell align="center">{row.fat}</TableCell>
+                      <TableCell align="center">
+                        <MoreHorizIcon />
+                      </TableCell>
                     </TableRow>
                   );
                 })}
