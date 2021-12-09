@@ -1,7 +1,8 @@
 import Header from "./components/ui/Header";
 import { makeStyles } from "@material-ui/core/styles";
-import SearchBar from "./components/ui/SearchBar";
+import SearchBar from "./components/reusable/SearchBar";
 import Footer from "./components/ui/Footer";
+import Table from "./components/reusable/Table";
 
 const useStyles = makeStyles((theme) => ({
   app: {
@@ -16,6 +17,7 @@ const App = () => {
     <div className={classes.app}>
       <Header />
       <SearchBar />
+      <Table />
       <Footer />
     </div>
   );
