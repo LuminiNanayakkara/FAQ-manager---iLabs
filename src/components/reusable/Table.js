@@ -10,6 +10,7 @@ import TableRow from "@material-ui/core/TableRow";
 import TableSortLabel from "@material-ui/core/TableSortLabel";
 import Paper from "@material-ui/core/Paper";
 import CustomTableHead from "./CustomTableHead";
+import Button from "@material-ui/core/Button";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -34,16 +35,37 @@ const useStyles = makeStyles((theme) => ({
     top: 20,
     width: 1,
   },
+  statusButton: {
+    textTransform: "none",
+    width: "6rem",
+  },
+  publishButton: {
+    textTransform: "none",
+    width: "6rem",
+    backgroundColor: "#4CAF50",
+  },
 }));
 
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
+function createData(name, calories, fat, status, protein) {
+  return { name, calories, fat, status, protein };
 }
 
 const rows = [
-  createData("1", "What is the vision of the iLab?", 3.7, 67, 4.3),
-  createData("2", "What is the mission of the iLab?", 25.0, 51, 4.9),
-  createData("3", "When iLab got established?", 16.0, 24, 6.0),
+  createData(
+    "1",
+    "What is the vision of the iLab?",
+    "About Company",
+    "Published",
+    4.3
+  ),
+  createData(
+    "2",
+    "What is the mission of the iLab?",
+    "About Company",
+    "Published",
+    4.9
+  ),
+  createData("3", "When iLab got established?", "About Company", "Draft", 6.0),
 ];
 
 function descendingComparator(a, b, orderBy) {
@@ -122,8 +144,19 @@ export default function EnhancedTable() {
                       </TableCell>
                       <TableCell align="center">{row.calories}</TableCell>
                       <TableCell align="center">{row.fat}</TableCell>
-                      <TableCell align="center">{row.carbs}</TableCell>
-                      <TableCell align="center">{row.carbs}</TableCell>
+                      <TableCell align="center">
+                        <Button
+                          variant="contained"
+                          className={
+                            row.status === "Published"
+                              ? classes.publishButton
+                              : classes.statusButton
+                          }
+                        >
+                          {row.status}
+                        </Button>
+                      </TableCell>
+                      <TableCell align="center">{row.fat}</TableCell>
                     </TableRow>
                   );
                 })}
