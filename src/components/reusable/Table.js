@@ -13,7 +13,8 @@ import CustomTableHead from "./CustomTableHead";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: "100%",
+    width: "96.5%",
+    marginLeft: "2rem",
   },
   paper: {
     width: "100%",
@@ -131,6 +132,7 @@ export default function EnhancedTable() {
                       </TableCell>
                       <TableCell align="right">{row.calories}</TableCell>
                       <TableCell align="right">{row.fat}</TableCell>
+                      <TableCell align="right">{row.carbs}</TableCell>
                       <TableCell align="right">{row.carbs}</TableCell>
                     </TableRow>
                   );
