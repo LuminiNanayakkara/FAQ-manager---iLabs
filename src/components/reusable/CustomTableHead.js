@@ -7,15 +7,15 @@ import TableSortLabel from "@material-ui/core/TableSortLabel";
 
 const headCells = [
   {
-    id: "name",
+    id: "id",
     numeric: false,
     disablePadding: true,
     label: "#",
   },
-  { id: "calories", numeric: true, disablePadding: false, label: "Question" },
-  { id: "fat", numeric: true, disablePadding: false, label: "Category" },
-  { id: "carbs", numeric: true, disablePadding: false, label: "Status" },
-  { id: "carbs", numeric: true, disablePadding: false, label: "Action" },
+  { id: "question", numeric: true, disablePadding: false, label: "Question" },
+  { id: "category", numeric: true, disablePadding: false, label: "Category" },
+  { id: "status", numeric: true, disablePadding: false, label: "Status" },
+  { id: "action", numeric: true, disablePadding: false, label: "Action" },
 ];
 
 function CustomTableHead(props) {

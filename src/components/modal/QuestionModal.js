@@ -7,6 +7,8 @@ import TextField from "@material-ui/core/TextField";
 import { Grid } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 
+import axios from "../axios/axios";
+
 const useStyles = makeStyles((theme) => ({
   modal: {
     display: "flex",
@@ -36,9 +38,25 @@ export default function QuestionModal(props) {
   const classes = useStyles();
 
   const [category, setCategory] = useState("About Company");
+  const [question, setQuestion] = useState("");
 
   const handleChange = (event) => {
     setCategory(event.target.value);
+  };
+
+  const handleFormData = async () => {
+    const data = {
+      question,
+      category,
+    };
+    try {
+      const result = await axios.post("/add-question", data);
+      console.log(result);
+      setQuestion("");
+      props.handleClose();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -66,6 +84,10 @@ export default function QuestionModal(props) {
                   rows={4}
                   variant="outlined"
                   className={classes.questionField}
+                  inputProps={{ maxLength: 200 }}
+                  required
+                  value={question}
+                  onChange={(event) => setQuestion(event.target.value)}
                 />
               </Grid>
               <Grid item>
@@ -89,7 +111,9 @@ export default function QuestionModal(props) {
               </Grid>
               <Grid item>
                 <center>
-                  <Button variant="contained">Add Question</Button>
+                  <Button variant="contained" onClick={() => handleFormData()}>
+                    Add Question
+                  </Button>
                 </center>
               </Grid>
             </Grid>

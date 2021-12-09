@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -17,6 +17,7 @@ import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
+import axios from "../axios/axios";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -52,25 +53,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function createData(name, calories, fat, status) {
-  return { name, calories, fat, status };
+function createData(id, question, category, status) {
+  return { id, question, category, status };
 }
-
-const rows = [
-  createData(
-    "1",
-    "What is the vision of the iLab?",
-    "About Company",
-    "Published"
-  ),
-  createData(
-    "2",
-    "What is the mission of the iLab?",
-    "About Company",
-    "Published"
-  ),
-  createData("3", "When iLab got established?", "About Company", "Draft"),
-];
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -98,13 +83,15 @@ function stableSort(array, comparator) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-export default function CustomTable() {
+export default function CustomTable(props) {
   const classes = useStyles();
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("calories");
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [action, setAction] = useState(false);
+  const [rows, setRows] = useState(0);
+  const [questionData, setQuestionData] = useState([]);
 
   const [anchorEl, setAnchorEl] = useState(null);
 
@@ -134,6 +121,19 @@ export default function CustomTable() {
     setPage(0);
   };
 
+  useEffect(() => {
+    GetQuestionTableData();
+  }, []);
+
+  const GetQuestionTableData = async () => {
+    try {
+      const result = await axios.get("/get-questions");
+      console.log(result.data);
+    } catch (error) {
+      alert("Data fetch error");
+    }
+  };
+
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>
@@ -151,17 +151,12 @@ export default function CustomTable() {
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row) => {
                   return (
-                    <TableRow
-                      hover
-                      role="checkbox"
-                      tabIndex={-1}
-                      key={row.name}
-                    >
+                    <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
                       <TableCell component="th" scope="row" align="center">
-                        {row.name}
+                        {row.id}
                       </TableCell>
-                      <TableCell align="center">{row.calories}</TableCell>
-                      <TableCell align="center">{row.fat}</TableCell>
+                      <TableCell align="center">{row.question}</TableCell>
+                      <TableCell align="center">{row.category}</TableCell>
                       <TableCell align="center">
                         <Button
                           variant="contained"
