@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const instance = axios.create({
-  baseURL: "http://localhost:9090",
+  baseURL: "https://floating-brook-07767.herokuapp.com",
 });
 
 export default instance;

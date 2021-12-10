@@ -45,7 +45,7 @@ export default function QuestionModal(props) {
   };
 
   const handleFormData = async () => {
-    if (question.length > 5) {
+    if (question.length > 10) {
       const data = {
         question,
         category,
@@ -58,7 +58,7 @@ export default function QuestionModal(props) {
         alert("Unexpected Error Occured");
       }
     } else {
-      alert("Please enter a question(Must have at leaset 10 letters)");
+      alert("Please enter a question (Must have at least 10 letters)");
     }
   };
 
