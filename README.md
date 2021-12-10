@@ -9,7 +9,7 @@ Commands :-
 	
 
 I deployed NodeJs backend in heroku. 
-	BACKEND LINK :- https://floating-brook-07767.herokuapp.com 
+	LINK :- https://floating-brook-07767.herokuapp.com 
 
 Functionalities in frontend:-
 
@@ -19,4 +19,5 @@ Functionalities in frontend:-
 	4) User can manage the status by pressing the deactivate button in the modal.
 	5) User can delete the added details by clicking the delete option in modal.
 	6) By using the search bar, user can filter the questions.
-  7) I used MongoDB as the DB
+	7) I used MongoDB as the DB
+	
