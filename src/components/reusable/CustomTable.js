@@ -52,61 +52,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function createData(name, calories, fat, status) {
-  return { name, calories, fat, status };
-}
-
-const rows = [
-  createData(
-    "1",
-    "What is the vision of the iLab?",
-    "About Company",
-    "Published"
-  ),
-  createData(
-    "2",
-    "What is the mission of the iLab?",
-    "About Company",
-    "Published"
-  ),
-  createData("3", "When iLab got established?", "About Company", "Draft"),
-];
-
-function descendingComparator(a, b, orderBy) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
-}
-
-function getComparator(order, orderBy) {
-  return order === "desc"
-    ? (a, b) => descendingComparator(a, b, orderBy)
-    : (a, b) => -descendingComparator(a, b, orderBy);
-}
-
-function stableSort(array, comparator) {
-  const stabilizedThis = array.map((el, index) => [el, index]);
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
-  return stabilizedThis.map((el) => el[0]);
-}
-
-export default function CustomTable() {
+const CustomTable = (props) => {
   const classes = useStyles();
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("calories");
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [action, setAction] = useState(false);
-
   const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -115,9 +68,6 @@ export default function CustomTable() {
   const handleClose = () => {
     setAnchorEl(null);
   };
-
-  const open = Boolean(anchorEl);
-  const id = open ? "simple-popover" : undefined;
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -134,6 +84,14 @@ export default function CustomTable() {
     setPage(0);
   };
 
+  const handleView = (data) => {
+    props.setIsViewBoxOpen(true);
+  };
+  const handleViewData = (data) => {
+    props.setViewData(data);
+  };
+
+  const id = open ? "simple-popover" : undefined;
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>
@@ -144,24 +102,19 @@ export default function CustomTable() {
               order={order}
               orderBy={orderBy}
               onRequestSort={handleRequestSort}
-              rowCount={rows.length}
+              rowCount={props.data.length}
             />
             <TableBody>
-              {stableSort(rows, getComparator(order, orderBy))
+              {props.data
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row) => {
+                .map((row, index) => {
                   return (
-                    <TableRow
-                      hover
-                      role="checkbox"
-                      tabIndex={-1}
-                      key={row.name}
-                    >
+                    <TableRow hover role="checkbox" tabIndex={-1} key={row._id}>
                       <TableCell component="th" scope="row" align="center">
-                        {row.name}
+                        {index + 1}
                       </TableCell>
-                      <TableCell align="center">{row.calories}</TableCell>
-                      <TableCell align="center">{row.fat}</TableCell>
+                      <TableCell align="center">{row.question}</TableCell>
+                      <TableCell align="center">{row.category}</TableCell>
                       <TableCell align="center">
                         <Button
                           variant="contained"
@@ -177,7 +130,10 @@ export default function CustomTable() {
                       <TableCell align="center">
                         <MoreHorizIcon
                           aria-describedby={id}
-                          onClick={handleClick}
+                          onClick={(event) => {
+                            handleClick(event);
+                            handleViewData(row);
+                          }}
                         />
 
                         <Menu
@@ -185,16 +141,21 @@ export default function CustomTable() {
                           open={open}
                           anchorEl={anchorEl}
                           onClose={handleClose}
-                          anchorOrigin={{
-                            vertical: "center",
-                            horizontal: "right",
-                          }}
+                          // anchorOrigin={{
+                          //   // vertical: "center",
+                          //   horizontal: "right",
+                          // }}
                           transformOrigin={{
                             vertical: "center",
                             horizontal: "right",
                           }}
                         >
-                          <MenuItem onClick={handleClose}>
+                          <MenuItem
+                            onClick={() => {
+                              handleClose();
+                              handleView(row);
+                            }}
+                          >
                             <Grid container spacing={2}>
                               <Grid item>
                                 <VisibilityIcon />
@@ -204,7 +165,12 @@ export default function CustomTable() {
                               </Grid>
                             </Grid>
                           </MenuItem>
-                          <MenuItem onClick={handleClose}>
+                          <MenuItem
+                            onClick={() => {
+                              handleClose();
+                              props.handleDeactivate();
+                            }}
+                          >
                             <Grid container spacing={2}>
                               <Grid item>
                                 <CheckCircleOutlineIcon />
@@ -214,7 +180,12 @@ export default function CustomTable() {
                               </Grid>
                             </Grid>
                           </MenuItem>
-                          <MenuItem onClick={handleClose}>
+                          <MenuItem
+                            onClick={() => {
+                              handleClose();
+                              props.handleDelete();
+                            }}
+                          >
                             <Grid container spacing={2}>
                               <Grid item>
                                 <DeleteForeverIcon />
@@ -235,7 +206,7 @@ export default function CustomTable() {
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={rows.length}
+          count={props.data.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}
@@ -244,4 +215,6 @@ export default function CustomTable() {
       </Paper>
     </div>
   );
-}
+};
+
+export default CustomTable;
