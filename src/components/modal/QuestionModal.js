@@ -45,17 +45,20 @@ export default function QuestionModal(props) {
   };
 
   const handleFormData = async () => {
-    const data = {
-      question,
-      category,
-    };
-    try {
-      const result = await axios.post("/add-question", data);
-      console.log(result);
-      setQuestion("");
-      props.handleClose();
-    } catch (error) {
-      console.log(error);
+    if (question.length > 5) {
+      const data = {
+        question,
+        category,
+      };
+      try {
+        const result = await axios.post("/add-question", data);
+        setQuestion("");
+        props.handleClose();
+      } catch (error) {
+        alert("Unexpected Error Occured");
+      }
+    } else {
+      alert("Please enter a question(Must have at leaset 10 letters)");
     }
   };
 
@@ -111,7 +114,11 @@ export default function QuestionModal(props) {
               </Grid>
               <Grid item>
                 <center>
-                  <Button variant="contained" onClick={() => handleFormData()}>
+                  <Button
+                    variant="contained"
+                    onClick={() => handleFormData()}
+                    color="primary"
+                  >
                     Add Question
                   </Button>
                 </center>

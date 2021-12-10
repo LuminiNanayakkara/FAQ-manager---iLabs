@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -17,7 +17,6 @@ import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
-import axios from "../axios/axios";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -53,47 +52,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function createData(id, question, category, status) {
-  return { id, question, category, status };
-}
-
-function descendingComparator(a, b, orderBy) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
-}
-
-function getComparator(order, orderBy) {
-  return order === "desc"
-    ? (a, b) => descendingComparator(a, b, orderBy)
-    : (a, b) => -descendingComparator(a, b, orderBy);
-}
-
-function stableSort(array, comparator) {
-  const stabilizedThis = array.map((el, index) => [el, index]);
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
-  return stabilizedThis.map((el) => el[0]);
-}
-
-export default function CustomTable(props) {
+const CustomTable = (props) => {
   const classes = useStyles();
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("calories");
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [action, setAction] = useState(false);
-  const [rows, setRows] = useState(0);
-  const [questionData, setQuestionData] = useState([]);
-
   const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -102,9 +68,6 @@ export default function CustomTable(props) {
   const handleClose = () => {
     setAnchorEl(null);
   };
-
-  const open = Boolean(anchorEl);
-  const id = open ? "simple-popover" : undefined;
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -121,19 +84,14 @@ export default function CustomTable(props) {
     setPage(0);
   };
 
-  useEffect(() => {
-    GetQuestionTableData();
-  }, []);
-
-  const GetQuestionTableData = async () => {
-    try {
-      const result = await axios.get("/get-questions");
-      console.log(result.data);
-    } catch (error) {
-      alert("Data fetch error");
-    }
+  const handleView = (data) => {
+    props.setIsViewBoxOpen(true);
+  };
+  const handleViewData = (data) => {
+    props.setViewData(data);
   };
 
+  const id = open ? "simple-popover" : undefined;
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>
@@ -144,16 +102,16 @@ export default function CustomTable(props) {
               order={order}
               orderBy={orderBy}
               onRequestSort={handleRequestSort}
-              rowCount={rows.length}
+              rowCount={props.data.length}
             />
             <TableBody>
-              {stableSort(rows, getComparator(order, orderBy))
+              {props.data
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row) => {
+                .map((row, index) => {
                   return (
-                    <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
+                    <TableRow hover role="checkbox" tabIndex={-1} key={row._id}>
                       <TableCell component="th" scope="row" align="center">
-                        {row.id}
+                        {index + 1}
                       </TableCell>
                       <TableCell align="center">{row.question}</TableCell>
                       <TableCell align="center">{row.category}</TableCell>
@@ -172,7 +130,10 @@ export default function CustomTable(props) {
                       <TableCell align="center">
                         <MoreHorizIcon
                           aria-describedby={id}
-                          onClick={handleClick}
+                          onClick={(event) => {
+                            handleClick(event);
+                            handleViewData(row);
+                          }}
                         />
 
                         <Menu
@@ -180,16 +141,21 @@ export default function CustomTable(props) {
                           open={open}
                           anchorEl={anchorEl}
                           onClose={handleClose}
-                          anchorOrigin={{
-                            vertical: "center",
-                            horizontal: "right",
-                          }}
+                          // anchorOrigin={{
+                          //   // vertical: "center",
+                          //   horizontal: "right",
+                          // }}
                           transformOrigin={{
                             vertical: "center",
                             horizontal: "right",
                           }}
                         >
-                          <MenuItem onClick={handleClose}>
+                          <MenuItem
+                            onClick={() => {
+                              handleClose();
+                              handleView(row);
+                            }}
+                          >
                             <Grid container spacing={2}>
                               <Grid item>
                                 <VisibilityIcon />
@@ -199,7 +165,12 @@ export default function CustomTable(props) {
                               </Grid>
                             </Grid>
                           </MenuItem>
-                          <MenuItem onClick={handleClose}>
+                          <MenuItem
+                            onClick={() => {
+                              handleClose();
+                              props.handleDeactivate();
+                            }}
+                          >
                             <Grid container spacing={2}>
                               <Grid item>
                                 <CheckCircleOutlineIcon />
@@ -209,7 +180,12 @@ export default function CustomTable(props) {
                               </Grid>
                             </Grid>
                           </MenuItem>
-                          <MenuItem onClick={handleClose}>
+                          <MenuItem
+                            onClick={() => {
+                              handleClose();
+                              props.handleDelete();
+                            }}
+                          >
                             <Grid container spacing={2}>
                               <Grid item>
                                 <DeleteForeverIcon />
@@ -230,7 +206,7 @@ export default function CustomTable(props) {
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={rows.length}
+          count={props.data.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}
@@ -239,4 +215,6 @@ export default function CustomTable(props) {
       </Paper>
     </div>
   );
-}
+};
+
+export default CustomTable;
