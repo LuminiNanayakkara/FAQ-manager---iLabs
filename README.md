@@ -9,7 +9,13 @@ Commands :-
 	
 
 I deployed NodeJs backend in heroku. 
-	LINK :- https://floating-brook-07767.herokuapp.com 
+	LINK :- https://floating-brook-07767.herokuapp.com
+
+API Endpoints :-
+	To get all the questions   - https://floating-brook-07767.herokuapp.com/get-questions
+	To add the questions       - https://floating-brook-07767.herokuapp.com/add-question
+	To deactivate the question - https://floating-brook-07767.herokuapp.com/deactivate
+	To delete the questions    - https://floating-brook-07767.herokuapp.com/delete/:id
 
 Functionalities in frontend:-
 
