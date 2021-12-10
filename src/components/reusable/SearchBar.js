@@ -23,8 +23,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const SearchBar = () => {
+const SearchBar = (props) => {
   const classes = useStyles();
+
+  const handleChange = (e) => {
+    props.setSearchTerm(e.target.value);
+  };
   return (
     <React.Fragment>
       <Paper className={classes.paper}>
@@ -36,12 +40,14 @@ const SearchBar = () => {
               variant="outlined"
               color="primary"
               fullWidth
+              onChange={handleChange}
+              value={props.searchTerm}
             />
           </Grid>
           <Grid item xs={2}>
             <Button
               variant="contained"
-              color="#1A237E"
+              onClick={() => props.searchFunction()}
               fullWidth
               className={classes.searchButton}
             >

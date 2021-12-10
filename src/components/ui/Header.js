@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Header = () => {
+const Header = (props) => {
   const classes = useStyles();
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -38,6 +38,7 @@ const Header = () => {
 
   const handleClose = () => {
     setModalOpen(false);
+    props.GetQuestionTableData();
   };
   return (
     <React.Fragment>
